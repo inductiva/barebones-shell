@@ -48,13 +48,20 @@ jobs:
           $file = "C:\hostedtoolcache\windows\Python\3.12.10\x64\Lib\site-packages\inductiva\__init__.py"
           (Get-Content $file) -replace '^_check_for_available_package_update\(\)', '#_check_for_available_package_update()' | Set-Content $file
 
-          pyinstaller barebones_shell.py --name barebones_shell_x64 --icon=favicon.ico --additional-hooks-dir=. --onefile
+          # Extract version string from __init__.py
+          $version_line = Select-String -Path $file -Pattern '__version__\s*=\s*".*"' | Select-Object -First 1
+          $version = $version_line -replace '.*__version__\s*=\s*"(.*)".*', '$1'
+          echo "Extracted version: $version"
+          echo "VERSION=$version" >> $env:GITHUB_ENV
+
+          # Build with PyInstaller
+          pyinstaller barebones_shell.py --name "barebones_shell_x64_v$version" --icon=favicon.ico --additional-hooks-dir=. --onefile
 
       - name: Upload x64 executable artifact
         uses: actions/upload-artifact@v4
         with:
-          name: barebones_shell_x64
-          path: barebones-shell/dist/barebones_shell_x64.exe
+          name: barebones_shell_x64_v${{ env.VERSION }}
+          path: barebones-shell/dist/barebones_shell_x64_v${{ env.VERSION }}.exe
 
   release:
     needs: [run_on_windows_x64]
