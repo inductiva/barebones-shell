@@ -32,9 +32,9 @@ jobs:
 
           $env:Path += ";c:\python312\Scripts"
           $env:PYTHONUTF8 = 1
-
-          python -m pip install --upgrade pip setuptools wheel
-          python -m pip install --upgrade inductiva pyinstaller prompt_toolkit truststore
+          pip install --only-binary=:all: cffi
+          pip install --upgrade pip setuptools wheel
+          pip install --upgrade inductiva pyinstaller prompt_toolkit truststore
 
           if ("${{ github.ref }}" -eq "refs/heads/main") {
             $env:INDUCTIVA_API_KEY = "${{ secrets.API_TEST_KEY }}"
