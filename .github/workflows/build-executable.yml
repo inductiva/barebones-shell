@@ -63,13 +63,15 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.12'
+
       - name: Install dependencies and build x64 exe
         env:
           BOT_REPO_ACCESS: ${{ secrets.BOT_REPO_ACCESS }}
         run: |
-          Set-ExecutionPolicy Bypass -Scope Process
-          Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
-
           echo "Verifying Python installation..."
           python --version
 
