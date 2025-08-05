@@ -1,18 +1,23 @@
+"""Barebones Shell for Running Python Scripts and Inductiva CLI"""
 import sys
 import runpy
 import shlex
 from pathlib import Path
 from prompt_toolkit import PromptSession
 
+# pylint: disable=unused-import
 import inductiva
 import inductiva._cli as cli_pkg
 
 # Command to build exe
-# pyinstaller barebones_shell.py --name barebones_shell --icon=favicon.ico --additional-hooks-dir=. --onefile
+# pyinstaller barebones_shell.py --name barebones_shell --icon=favicon.ico
+# --additional-hooks-dir=. --onefile
+
 
 def run_python_file(filepath: str, args: list[str]):
     """
-    Runs a Python script with the provided arguments in a simulated __main__ environment.
+    Runs a Python script with the provided arguments in a simulated __main__
+    environment.
     """
     original_argv = sys.argv
     try:
@@ -24,7 +29,8 @@ def run_python_file(filepath: str, args: list[str]):
 
 def run_inductiva_cli(args: list[str]):
     """
-    Runs the Inductiva CLI with the provided arguments, handling SystemExit cleanly.
+    Runs the Inductiva CLI with the provided arguments, handling SystemExit
+    cleanly.
     """
     original_argv = sys.argv
     try:
@@ -41,7 +47,8 @@ def run_inductiva_cli(args: list[str]):
 
 def main():
     """
-    Launches the interactive command loop for running Python files or Inductiva CLI commands.
+    Launches the interactive command loop for running Python files or Inductiva
+    CLI commands.
     """
     print("Inductiva Runner. Type 'exit' or Ctrl+C to quit.")
     session = PromptSession()
