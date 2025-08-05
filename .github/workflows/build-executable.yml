@@ -44,6 +44,9 @@ jobs:
           }
 
           cd barebones-shell
+          echo "Inductiva installed at..."
+          python -c "import inductiva; print(inductiva.__file__)"
+
 
           pyinstaller barebones_shell.py --name barebones_shell_x64 --icon=favicon.ico --additional-hooks-dir=. --onefile
 
