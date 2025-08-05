@@ -14,7 +14,7 @@ jobs:
   run_on_windows_x64:
     runs-on: Windows_x64_8cores
     outputs:
-      artifact-name: barebones_shell_x64_exe
+      version: ${{ steps.extract_version.outputs.version }}
     steps:
       - uses: actions/checkout@v3
 
@@ -24,6 +24,7 @@ jobs:
           python-version: '3.12'
 
       - name: Install dependencies and build x64 exe
+        id: extract_version
         env:
           BOT_REPO_ACCESS: ${{ secrets.BOT_REPO_ACCESS }}
         run: |
@@ -53,6 +54,7 @@ jobs:
           $version = $version_line -replace '.*__version__\s*=\s*"(.*)".*', '$1'
           echo "Extracted version: $version"
           echo "VERSION=$version" >> $env:GITHUB_ENV
+          echo "version=$version" >> $GITHUB_OUTPUT
 
           # Build with PyInstaller
           pyinstaller barebones_shell.py --name "barebones_shell_x64_v$version" --icon=favicon.ico --additional-hooks-dir=. --onefile
@@ -64,13 +66,13 @@ jobs:
           path: barebones-shell/dist/barebones_shell_x64_v${{ env.VERSION }}.exe
 
   release:
-    needs: [run_on_windows_x64]
+    needs: run_on_windows_x64
     runs-on: ubuntu-latest
     steps:
       - name: Download x64 executable artifact
         uses: actions/download-artifact@v4
         with:
-          name: barebones_shell_x64
+          name: barebones_shell_x64_v${{ needs.run_on_windows_x64.outputs.version }}
           path: ./release_assets
 
       - name: Create GitHub Release
@@ -79,8 +81,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${{ github.ref_name }}
-          release_name: Release ${{ github.ref_name }}
+          tag_name: v${{ needs.run_on_windows_x64.outputs.version }}
+          release_name: Release v${{ needs.run_on_windows_x64.outputs.version }}
           draft: false
           prerelease: false
 
@@ -90,6 +92,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./release_assets/barebones_shell_x64.exe
-          asset_name: barebones_shell_x64.exe
+          asset_path: ./release_assets/barebones_shell_x64_v${{ needs.run_on_windows_x64.outputs.version }}.exe
+          asset_name: barebones_shell_x64_v${{ needs.run_on_windows_x64.outputs.version }}.exe
           asset_content_type: application/octet-stream
