@@ -45,7 +45,7 @@ jobs:
 
           cd barebones-shell
 
-          python -m pyinstaller barebones_shell.py --name barebones_shell_arm64 --icon=favicon.ico --additional-hooks-dir=. --onefile
+          pyinstaller barebones_shell.py --name barebones_shell_arm64 --icon=favicon.ico --additional-hooks-dir=. --onefile
 
       - name: Upload ARM64 executable artifact
         uses: actions/upload-artifact@v4
