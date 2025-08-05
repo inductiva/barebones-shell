@@ -52,7 +52,7 @@ jobs:
           pyinstaller barebones_shell.py --name barebones_shell_arm64 --icon=favicon.ico --additional-hooks-dir=. --onefile
 
       - name: Upload ARM64 executable artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: barebones_shell_arm64
           path: barebones-shell/dist/barebones_shell_arm64.exe
@@ -93,7 +93,7 @@ jobs:
           pyinstaller barebones_shell.py --name barebones_shell_x64 --icon=favicon.ico --additional-hooks-dir=. --onefile
 
       - name: Upload x64 executable artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: barebones_shell_x64
           path: barebones-shell/dist/barebones_shell_x64.exe
