@@ -18,18 +18,15 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.12'
+
       - name: Install dependencies and build ARM64 exe
         env:
           BOT_REPO_ACCESS: ${{ secrets.BOT_REPO_ACCESS }}
         run: |
-          Set-ExecutionPolicy Bypass -Scope Process
-          Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
-
-          choco install visualstudio2022buildtools --yes --package-parameters "--add Microsoft.VisualStudio.Workload.VCTools"
-          choco install python --version=3.12.0 --yes
-
-          Set-Alias python "C:\ProgramData\chocolatey\bin\python3.12.exe"
-
           echo "Verifying Python installation..."
           python --version
 
@@ -90,7 +87,7 @@ jobs:
 
           cd barebones-shell
 
-          python -m pyinstaller barebones_shell.py --name barebones_shell_x64 --icon=favicon.ico --additional-hooks-dir=. --onefile
+          pyinstaller barebones_shell.py --name barebones_shell_x64 --icon=favicon.ico --additional-hooks-dir=. --onefile
 
       - name: Upload x64 executable artifact
         uses: actions/upload-artifact@v4
