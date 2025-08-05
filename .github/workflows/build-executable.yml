@@ -65,7 +65,7 @@ jobs:
 
       - name: Create GitHub Release
         id: create_release
-        uses: actions/create-release@v0.1
+        uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
@@ -73,16 +73,6 @@ jobs:
           release_name: Release ${{ github.ref_name }}
           draft: false
           prerelease: false
-
-      - name: Upload ARM64 exe to Release
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./release_assets/barebones_shell_arm64.exe
-          asset_name: barebones_shell_arm64.exe
-          asset_content_type: application/octet-stream
 
       - name: Upload x64 exe to Release
         uses: actions/upload-release-asset@v1
